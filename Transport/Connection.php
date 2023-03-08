@@ -39,7 +39,7 @@ class Connection
         'wait_time' => 20,
         'poll_timeout' => 0.1,
         'visibility_timeout' => null,
-        'auto_setup' => true,
+        'auto_setup' => false,
         'access_key' => null,
         'secret_key' => null,
         'session_token' => null,
@@ -271,10 +271,6 @@ class Connection
             'QueueOwnerAWSAccountId' => $this->configuration['account'],
         ])->isSuccess()) {
             return;
-        }
-
-        if (null !== $this->configuration['account']) {
-            throw new InvalidArgumentException(sprintf('The Amazon SQS queue "%s" does not exist (or you don\'t have permissions on it), and can\'t be created when an account is provided.', $this->configuration['queue_name']));
         }
 
         $parameters = ['QueueName' => $this->configuration['queue_name']];
