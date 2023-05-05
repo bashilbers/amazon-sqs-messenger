@@ -274,11 +274,18 @@ class Connection
         }
 
         $parameters = ['QueueName' => $this->configuration['queue_name']];
+        $attributes = [];
+
+        if ($this->configuration['visibility_timeout'] !== null) {
+            $attributes['VisibilityTimeout'] = $this->configuration['visibility_timeout'];
+        }
 
         if (self::isFifoQueue($this->configuration['queue_name'])) {
-            $parameters['Attributes'] = [
-                'FifoQueue' => 'true',
-            ];
+            $attributes['FifoQueue'] = 'true';
+        }
+
+        if (count($attributes) > 0) {
+            $parameters['Attributes'] = $attributes;
         }
 
         $this->client->createQueue($parameters);
@@ -290,6 +297,7 @@ class Connection
         }
         $this->queueUrl = null;
     }
+
 
     public function delete(string $id): void
     {
